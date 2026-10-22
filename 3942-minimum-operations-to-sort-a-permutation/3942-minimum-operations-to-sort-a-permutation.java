@@ -2,40 +2,36 @@
 class Solution {
     public int minOperations(int[] nums) {
         int n = nums.length;
-        int zero = 0;
+        int ans = Integer.MAX_VALUE;
+
+        int k = nums[0];
+        boolean inc = true;
 
         for (int i = 0; i < n; i++) {
-            if (nums[i] == 0) {
-                zero = i;
+            if (nums[i] != (k + i) % n) {
+                inc = false;
                 break;
             }
         }
 
-        int ans = Integer.MAX_VALUE;
+        if (inc) {
+            ans = Math.min(ans,
+                    Math.min((n - k) % n, k + 2));
+        }
 
-        // Check circular increasing order in both directions
-        for (int step : new int[]{1, -1}) {
-            boolean valid = true;
+        boolean dec = true;
 
-            for (int i = 1; i < n; i++) {
-                int prev = (zero + (i - 1) * step + n) % n;
-                int curr = (zero + i * step + n) % n;
-
-                if (nums[prev] > nums[curr]) {
-                    valid = false;
-                    break;
-                }
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != (k - i + n) % n) {
+                dec = false;
+                break;
             }
+        }
 
-            if (valid) {
-                if (step == 1) {
-                    ans = Math.min(ans, zero);
-                    ans = Math.min(ans, n - zero + 2);
-                } else {
-                    ans = Math.min(ans, zero + 2);
-                    ans = Math.min(ans, n - zero);
-                }
-            }
+        if (dec) {
+            int shift = (n - 1 - k + n) % n;
+            ans = Math.min(ans,
+                    1 + Math.min(shift, (n - shift) % n));
         }
 
         return ans == Integer.MAX_VALUE ? -1 : ans;
