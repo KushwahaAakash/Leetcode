@@ -6,20 +6,18 @@ class Solution:
 
         even = 1
         odd = 0
-        prefix = 0
+        parity = 0
         ans = 0
 
         for num in arr:
 
-            prefix += num
+            parity ^= (num & 1)
 
-            if prefix % 2 == 0:
-                ans += odd
-                even += 1
-            else:
-                ans += even
+            if parity:
+                ans = (ans + even) % MOD
                 odd += 1
-
-            ans %= MOD
+            else:
+                ans = (ans + odd) % MOD
+                even += 1
 
         return ans
